@@ -9,7 +9,7 @@ blend_file_path = bpy.data.filepath
 # Get the directory of the Blender file
 blend_dir = os.path.dirname(blend_file_path)
 
-path = './'
+path = '.\\'
 
 # Construct the absolute path to the "data.csv" file
 data_file_path = os.path.join(blend_dir, path)

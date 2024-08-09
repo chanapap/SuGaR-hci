@@ -67,12 +67,14 @@ def extract_mesh_from_coarse_sugar(args):
     
     # Mesh output dir
     if args.mesh_output_dir is None:
-        if len(args.scene_path.split("/")[-1]) > 0:
-            args.mesh_output_dir = os.path.join("./output/coarse_mesh", args.scene_path.split("/")[-1])
+        if len(args.scene_path.split("\\")[-1]) > 0:
+            args.mesh_output_dir = os.path.join(".\\output\\coarse_mesh", args.scene_path.split("\\")[-1])
         else:
-            args.mesh_output_dir = os.path.join("./output/coarse_mesh", args.scene_path.split("/")[-2])
+            args.mesh_output_dir = os.path.join(".\\output\\coarse_mesh", args.scene_path.split("\\")[-2])
     mesh_output_dir = args.mesh_output_dir
     os.makedirs(mesh_output_dir, exist_ok=True)
+
+    print("PATH mesh_output_dir (extract_mesh_from_coarse_sugar)", mesh_output_dir)
             
     # Bounding box
     if args.bboxmin is None:
@@ -477,13 +479,14 @@ def extract_mesh_from_coarse_sugar(args):
                     if use_vanilla_3dgs:
                         sugar_mesh_path = 'sugarmesh_vanilla3dgs_levelZZ_decimAA.ply'
                     else:
-                        sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split('/')[-2].replace('sugarcoarse_', '') + '_levelZZ_decimAA.ply'
+                        sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split("\\")[-2].replace('sugarcoarse_', '') + '_levelZZ_decimAA.ply'
                     sugar_mesh_path = sugar_mesh_path.replace(
                         'ZZ', str(surface_level).replace('.', '')
                         ).replace(
                             'AA', str(decimation_target).replace('.', '')
                             )
                     sugar_mesh_path = os.path.join(mesh_output_dir, sugar_mesh_path)
+                    print("PATH sugar_mesh_path (extract_mesh_from_coarse_sugar)", sugar_mesh_path)
                     o3d.io.write_triangle_mesh(sugar_mesh_path, decimated_o3d_mesh, write_triangle_uvs=True, write_vertex_colors=True, write_vertex_normals=True)
                     CONSOLE.print("Mesh saved at", sugar_mesh_path)
                     all_sugar_mesh_paths.append(sugar_mesh_path)
@@ -612,11 +615,12 @@ def extract_mesh_from_coarse_sugar(args):
                     if use_vanilla_3dgs:
                         sugar_mesh_path = 'sugarmesh_vanilla3dgs_poissoncenters_decimAA.ply'
                     else:
-                        sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split('/')[-2].replace('sugarcoarse_', '') + '_poissoncenters_decimAA.ply'
+                        sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split("\\")[-2].replace('sugarcoarse_', '') + '_poissoncenters_decimAA.ply'
                     sugar_mesh_path = sugar_mesh_path.replace(
                             'AA', str(decimation_target).replace('.', '')
                             )
                     sugar_mesh_path = os.path.join(mesh_output_dir, sugar_mesh_path)
+                    print("PATH sugar_mesh_path (extract_mesh_from_coarse_sugar)", sugar_mesh_path)
                     o3d.io.write_triangle_mesh(sugar_mesh_path, decimated_o3d_mesh, write_triangle_uvs=True, write_vertex_colors=True, write_vertex_normals=True)
                     CONSOLE.print("Mesh saved at", sugar_mesh_path)
                     all_sugar_mesh_paths.append(sugar_mesh_path)
@@ -745,13 +749,15 @@ def extract_mesh_from_coarse_sugar(args):
         if use_vanilla_3dgs:
             sugar_mesh_path = 'sugarmesh_vanilla3dgsmarchingcubes_levelZZ_decimAA.ply'
         else:
-            sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split('/')[-2].replace('sugarcoarse_', '') + 'marchingcubes_levelZZ_decimAA.ply'
+            sugar_mesh_path = 'sugarmesh_' + sugar_checkpoint_path.split("\\")[-2].replace('sugarcoarse_', '') + 'marchingcubes_levelZZ_decimAA.ply'
         sugar_mesh_path = sugar_mesh_path.replace(
             'ZZ', str(surface_level).replace('.', '')
             ).replace(
                 'AA', str(decimation_target).replace('.', '')
                 )
         sugar_mesh_path = os.path.join(mesh_output_dir, sugar_mesh_path)
+        print("PATH sugar_mesh_path (extract_mesh_from_coarse_sugar)", sugar_mesh_path)
+
         o3d.io.write_triangle_mesh(sugar_mesh_path, decimated_o3d_mesh, write_triangle_uvs=True, write_vertex_colors=True, write_vertex_normals=True)
         CONSOLE.print("Mesh saved at", sugar_mesh_path)
         all_sugar_mesh_paths.append(sugar_mesh_path)

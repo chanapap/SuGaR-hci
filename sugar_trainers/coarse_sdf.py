@@ -226,10 +226,10 @@ def coarse_training_with_sdf_regularization(args):
     # ====================End of parameters====================
 
     if args.output_dir is None:
-        if len(args.scene_path.split("/")[-1]) > 0:
-            args.output_dir = os.path.join("./output/coarse", args.scene_path.split("/")[-1])
+        if len(args.scene_path.split("\\")[-1]) > 0:
+            args.output_dir = os.path.join(".\\output\\coarse", args.scene_path.split("\\")[-1])
         else:
-            args.output_dir = os.path.join("./output/coarse", args.scene_path.split("/")[-2])
+            args.output_dir = os.path.join(".\\output\\coarse", args.scene_path.split("\\")[-2])
             
     source_path = args.scene_path
     gs_checkpoint_path = args.checkpoint_path
@@ -238,7 +238,7 @@ def coarse_training_with_sdf_regularization(args):
     sdf_estimation_factor = args.estimation_factor
     sdf_better_normal_factor = args.normal_factor
     
-    sugar_checkpoint_path = f'sugarcoarse_3Dgs{iteration_to_load}_sdfestimXX_sdfnormYY/'
+    sugar_checkpoint_path = f'sugarcoarse_3Dgs{iteration_to_load}_sdfestimXX_sdfnormYY\\'
     sugar_checkpoint_path = os.path.join(args.output_dir, sugar_checkpoint_path)
     sugar_checkpoint_path = sugar_checkpoint_path.replace(
         'XX', str(sdf_estimation_factor).replace('.', '')

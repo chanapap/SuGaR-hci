@@ -223,18 +223,18 @@ def coarse_training_with_density_regularization(args):
 
     # -----Log and save-----
     print_loss_every_n_iterations = 50
-    save_model_every_n_iterations = 1_000_000
-    # save_milestones = [9000, 12_000, 15_000]
-    save_milestones = [15_000]
+    save_model_every_n_iterations = 3000
+    save_milestones = [3_000, 5_000, 7_000, 10_000, 12_000, 15_000]
+    # save_milestones = [15_000]
 
     # ====================End of parameters====================
 
     if args.output_dir is None:
-        if len(args.scene_path.split("/")[-1]) > 0:
-            args.output_dir = os.path.join("./output/coarse", args.scene_path.split("/")[-1])
+        if len(args.scene_path.split("\\")[-1]) > 0:
+            args.output_dir = os.path.join(".\\output\\coarse", args.scene_path.split("\\")[-1])
         else:
-            args.output_dir = os.path.join("./output/coarse", args.scene_path.split("/")[-2])
-            
+            args.output_dir = os.path.join(".\\output\\coarse", args.scene_path.split("\\")[-2])
+    print('PATH args.output_dir (coarse_training_with_density_regularization)', args.output_dir)
     source_path = args.scene_path
     gs_checkpoint_path = args.checkpoint_path
     iteration_to_load = args.iteration_to_load    
@@ -242,18 +242,18 @@ def coarse_training_with_density_regularization(args):
     sdf_estimation_factor = args.estimation_factor
     sdf_better_normal_factor = args.normal_factor
     
-    sugar_checkpoint_path = f'sugarcoarse_3Dgs{iteration_to_load}_densityestimXX_sdfnormYY/'
+    sugar_checkpoint_path = f'sugarcoarse_3Dgs{iteration_to_load}_densityestimXX_sdfnormYY\\'
     sugar_checkpoint_path = os.path.join(args.output_dir, sugar_checkpoint_path)
     sugar_checkpoint_path = sugar_checkpoint_path.replace(
         'XX', str(sdf_estimation_factor).replace('.', '')
         ).replace(
             'YY', str(sdf_better_normal_factor).replace('.', '')
             )
-    
+    print('PATH sugar_checkpoint_path (coarse_training_with_density_regularization)', sugar_checkpoint_path)
     use_eval_split = args.eval
     use_white_background = args.white_background
     
-    ply_path = os.path.join(source_path, "sparse/0/points3D.ply")
+    ply_path = os.path.join(source_path, "sparse\\0\\points3D.ply")
     
     CONSOLE.print("-----Parsed parameters-----")
     CONSOLE.print("Source path:", source_path)
@@ -796,6 +796,7 @@ def coarse_training_with_density_regularization(args):
             if (iteration % save_model_every_n_iterations == 0) or (iteration in save_milestones):
                 CONSOLE.print("Saving model...")
                 model_path = os.path.join(sugar_checkpoint_path, f'{iteration}.pt')
+                print("PATH model_path", model_path)
                 sugar.save_model(path=model_path,
                                 train_losses=train_losses,
                                 epoch=epoch,
@@ -828,6 +829,7 @@ def coarse_training_with_density_regularization(args):
     CONSOLE.print(f"Training finished after {num_iterations} iterations with loss={loss.detach().item()}.")
     CONSOLE.print("Saving final model...")
     model_path = os.path.join(sugar_checkpoint_path, f'{iteration}.pt')
+    print("PATH model_path", model_path)
     sugar.save_model(path=model_path,
                     train_losses=train_losses,
                     epoch=epoch,

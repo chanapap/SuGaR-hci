@@ -111,6 +111,13 @@ if __name__ == "__main__":
     if args.export_ply:
         print('Will export a ply file with the refined 3D Gaussians at the end of the training.')
     
+    print('PATH checkpoint_path', args.checkpoint_path)
+    print('PATH scene_path     ', args.scene_path)
+
+
+    print("="*60)
+    print("="*60)
+    print("----- Optimize coarse SuGaR -----")
     # ----- Optimize coarse SuGaR -----
     coarse_args = AttrDict({
         'checkpoint_path': args.checkpoint_path,
@@ -123,14 +130,18 @@ if __name__ == "__main__":
         'gpu': args.gpu,
         'white_background': args.white_background,
     })
+    
     if args.regularization_type == 'sdf':
         coarse_sugar_path = coarse_training_with_sdf_regularization(coarse_args)
     elif args.regularization_type == 'density':
         coarse_sugar_path = coarse_training_with_density_regularization(coarse_args)
+        print("PATH coarse_sugar_path", coarse_sugar_path)
     else:
         raise ValueError(f'Unknown regularization type: {args.regularization_type}')
     
-    
+    print("="*60)
+    print("="*60)
+    print("----- Extract mesh from coarse SuGaR -----")
     # ----- Extract mesh from coarse SuGaR -----
     coarse_mesh_args = AttrDict({
         'scene_path': args.scene_path,
@@ -150,8 +161,11 @@ if __name__ == "__main__":
         'use_vanilla_3dgs': False,
     })
     coarse_mesh_path = extract_mesh_from_coarse_sugar(coarse_mesh_args)[0]
+    print("PATH coarse_mesh_path", coarse_mesh_path)
     
-    
+    print("="*60)
+    print("="*60)
+    print("----- Refine SuGaR -----")
     # ----- Refine SuGaR -----
     refined_args = AttrDict({
         'scene_path': args.scene_path,
@@ -171,10 +185,15 @@ if __name__ == "__main__":
         'white_background': args.white_background,
     })
     refined_sugar_path = refined_training(refined_args)
+    print("PATH refined_sugar_path", refined_sugar_path)
+
     
     
     # ----- Extract mesh and texture from refined SuGaR -----
     if args.export_uv_textured_mesh:
+        print("="*60)
+        print("="*60)
+        print(" ----- Extract mesh and texture from refined SuGaR -----")
         refined_mesh_args = AttrDict({
             'scene_path': args.scene_path,
             'iteration_to_load': args.iteration_to_load,
@@ -190,4 +209,6 @@ if __name__ == "__main__":
             'postprocess_iterations': args.postprocess_iterations,
         })
         refined_mesh_path = extract_mesh_and_texture_from_refined_sugar(refined_mesh_args)
+        print("PATH refined_mesh_path", refined_mesh_path)
+
         

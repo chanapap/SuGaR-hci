@@ -3,7 +3,7 @@ import os
 import json
 import argparse
 
-viewer_path = './sugar_viewer'
+viewer_path = '.\\sugar_viewer'
 json_path = os.path.join(viewer_path, 'src', 'scene_to_load.json')
 
 if __name__ == "__main__":

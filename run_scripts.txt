@@ -1,0 +1,3 @@
+python gaussian_splatting\\train.py -s E:\\3d-recon\\datasets\\chair2-ssvid\\ --iterations 7000 -m gaussian_splatting\\output\\chair2-ssvid\\
+
+python train.py -s E:\\3d-recon\\datasets\\chair2-ssvid\\ -c gaussian_splatting\\output\\chair2-ssvid\\ -r "density"

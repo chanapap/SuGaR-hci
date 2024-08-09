@@ -223,17 +223,17 @@ def refined_training(args):
 
     # -----Log and save-----
     print_loss_every_n_iterations = 50
-    save_model_every_n_iterations = 1_000_000 # 500, 1_000_000  # TODO
-    save_milestones = [2000, 7_000, 15_000]
+    save_model_every_n_iterations = 3000  # TODO
+    save_milestones = [3_000, 5_000, 7_000, 10_000, 12_000, 15_000]
 
     # ====================End of parameters====================
 
     if args.output_dir is None:
-        if len(args.scene_path.split("/")[-1]) > 0:
-            args.output_dir = os.path.join("./output/refined", args.scene_path.split("/")[-1])
+        if len(args.scene_path.split("\\")[-1]) > 0:
+            args.output_dir = os.path.join(".\\output\\refined", args.scene_path.split("\\")[-1])
         else:
-            args.output_dir = os.path.join("./output/refined", args.scene_path.split("/")[-2])
-            
+            args.output_dir = os.path.join(".\\output\\refined", args.scene_path.split("\\")[-2])
+    print("PATH args.output_dir (refined_training)", args.output_dir)     
     # Bounding box
     if args.bboxmin is None:
         use_custom_bbox = False
@@ -259,7 +259,7 @@ def refined_training(args):
     source_path = args.scene_path
     gs_checkpoint_path = args.checkpoint_path
     surface_mesh_to_bind_path = args.mesh_path
-    mesh_name = surface_mesh_to_bind_path.split("/")[-1].split(".")[0]
+    mesh_name = surface_mesh_to_bind_path.split("\\")[-1].split(".")[0]
     iteration_to_load = args.iteration_to_load    
     
     surface_mesh_normal_consistency_factor = args.normal_consistency_factor    
@@ -267,13 +267,14 @@ def refined_training(args):
     n_vertices_in_fg = args.n_vertices_in_fg
     num_iterations = args.refinement_iterations
     
-    sugar_checkpoint_path = 'sugarfine_' + mesh_name.replace('sugarmesh_', '') + '_normalconsistencyXX_gaussperfaceYY/'
+    sugar_checkpoint_path = 'sugarfine_' + mesh_name.replace('sugarmesh_', '') + '_normalconsistencyXX_gaussperfaceYY\\'
     sugar_checkpoint_path = os.path.join(args.output_dir, sugar_checkpoint_path)
     sugar_checkpoint_path = sugar_checkpoint_path.replace(
         'XX', str(surface_mesh_normal_consistency_factor).replace('.', '')
         ).replace(
         'YY', str(n_gaussians_per_surface_triangle).replace('.', '')
         )
+    print("PATH sugar_checkpoint_path (refined_training)", sugar_checkpoint_path)
         
     if use_custom_bbox:
         fg_bbox_min = args.bboxmin
@@ -833,6 +834,7 @@ def refined_training(args):
             if (iteration % save_model_every_n_iterations == 0) or (iteration in save_milestones):
                 CONSOLE.print("Saving model...")
                 model_path = os.path.join(sugar_checkpoint_path, f'{iteration}.pt')
+                print("PATH model_path", model_path)
                 sugar.save_model(path=model_path,
                                 train_losses=train_losses,
                                 epoch=epoch,
@@ -865,6 +867,7 @@ def refined_training(args):
     CONSOLE.print(f"Training finished after {num_iterations} iterations with loss={loss.detach().item()}.")
     CONSOLE.print("Saving final model...")
     model_path = os.path.join(sugar_checkpoint_path, f'{iteration}.pt')
+    print("PATH model_path", model_path)
     sugar.save_model(path=model_path,
                     train_losses=train_losses,
                     epoch=epoch,
@@ -889,6 +892,7 @@ def refined_training(args):
         # Export and save ply
         refined_gaussians = convert_refined_sugar_into_gaussians(sugar)
         refined_gaussians.save_ply(refined_ply_save_path)
+        print("PATH refined_ply_save_path", refined_ply_save_path)
         CONSOLE.print("Ply file exported. This file is needed for using the dedicated viewer.")
     
     return model_path
